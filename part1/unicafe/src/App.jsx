@@ -6,7 +6,9 @@ const Button = ({onClick, text}) =>
   <button onClick={onClick}>{text}</button>
 
 const StatisticLine = ({type, count, unit=""}) => {
-  return <div>{type} {count}{unit}</div>
+  return <tr>
+    <td>{type}</td><td>{count}{unit}</td>
+  </tr>
 }
 
 const Statistics = ({good, neutral, bad}) => {
@@ -18,16 +20,20 @@ const Statistics = ({good, neutral, bad}) => {
 
   return (
     <div>
-      <StatisticLine type="good" count={good} />
-      <StatisticLine type="neutral" count={neutral} />
-      <StatisticLine type="bad" count={bad} />
-      <StatisticLine type="all" count={total} />
-      <StatisticLine type="average" count={
-        (good + bad * (-1)) / (total)
-      } />
-      <StatisticLine type="positive" count={
-        good / (total) * 100
-      } unit="%" />
+      <table>
+        <tbody>
+          <StatisticLine type="good" count={good} />
+          <StatisticLine type="neutral" count={neutral} />
+          <StatisticLine type="bad" count={bad} />
+          <StatisticLine type="all" count={total} />
+          <StatisticLine type="average" count={
+            (good + bad * (-1)) / (total)
+          } />
+          <StatisticLine type="positive" count={
+            good / (total) * 100
+          } unit="%" />
+        </tbody>
+      </table>
     </div>
   )
 }
