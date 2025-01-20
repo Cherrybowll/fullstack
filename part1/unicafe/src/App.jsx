@@ -5,7 +5,7 @@ const Header = ({text}) => <h1>{text}</h1>
 const Button = ({onClick, text}) =>
   <button onClick={onClick}>{text}</button>
 
-const Statistic = ({type, count, unit=""}) => {
+const StatisticLine = ({type, count, unit=""}) => {
   return <div>{type} {count}{unit}</div>
 }
 
@@ -18,14 +18,14 @@ const Statistics = ({good, neutral, bad}) => {
 
   return (
     <div>
-      <Statistic type="good" count={good} />
-      <Statistic type="neutral" count={neutral} />
-      <Statistic type="bad" count={bad} />
-      <Statistic type="all" count={total} />
-      <Statistic type="average" count={
+      <StatisticLine type="good" count={good} />
+      <StatisticLine type="neutral" count={neutral} />
+      <StatisticLine type="bad" count={bad} />
+      <StatisticLine type="all" count={total} />
+      <StatisticLine type="average" count={
         (good + bad * (-1)) / (total)
       } />
-      <Statistic type="positive" count={
+      <StatisticLine type="positive" count={
         good / (total) * 100
       } unit="%" />
     </div>
