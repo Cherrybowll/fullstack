@@ -1,5 +1,34 @@
 import { useState } from 'react'
 
+// All components defined in a single file against good practices
+
+const PhonebookForm = ({name, number, onChangeName, onChangeNumber, onSubmit}) =>
+  <form onSubmit={onSubmit}>
+  <div>
+    name: <input value={name} onChange={onChangeName} />
+    <br />
+    number: <input value={number} onChange={onChangeNumber} />
+  </div>
+  <div>
+    <button type="submit">add</button>
+  </div>
+  </form>
+
+const Filter = ({text, filter, onChange}) =>
+  <div>
+    {text} <input value={filter} onChange={onChange} />
+  </div>
+
+const Persons = ({persons}) =>
+  <div>
+    {persons.map(person => <Person key={person.id} person={person} />)}
+  </div>
+
+const Person = ({person}) =>
+  <div>
+    {person.name} {person.number}
+  </div>
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -16,7 +45,7 @@ const App = () => {
     if (persons.find(person => person.name === newName)) {
       alert(`${newName} is already added to phonebook`)
     } else {
-      setPersons(persons.concat({name: newName, number: newNumber}))
+      setPersons(persons.concat({name: newName, number: newNumber, id: persons.length + 1}))
       setNewName("")
       setNewNumber("")
     }
@@ -26,25 +55,21 @@ const App = () => {
   const handleChangeNumber = (event) => setNewNumber(event.target.value)
   const handleChangeFilter = (event) => setNameFilter(event.target.value)
 
-  const personsfiltered = persons.filter(person => person.name.toLowerCase().includes(nameFilter.toLowerCase()))
+  const personsfiltered = persons.filter(person =>
+    person.name.toLowerCase().includes(nameFilter.toLowerCase())
+  )
 
   return (
     <div>
       <h1>Phonebook</h1>
-      Name filter <input value={nameFilter} onChange={handleChangeFilter} />
+      <Filter text="Name filter" filter={nameFilter} onChange={handleChangeFilter} />
       <h2>Add new entry</h2>
-      <form onSubmit={handleNewEntry}>
-        <div>
-          name: <input value={newName} onChange={handleChangeName} />
-          <br />
-          number: <input value={newNumber} onChange={handleChangeNumber} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PhonebookForm
+        name={newName} number={newNumber} onChangeName={handleChangeName}
+        onChangeNumber={handleChangeNumber} onSubmit={handleNewEntry}
+      />
       <h2>Numbers</h2>
-      {personsfiltered.map(person => <p key={person.name}>{person.name} {person.number}</p>)}
+      <Persons persons={personsfiltered} />
     </div>
   )
 }
