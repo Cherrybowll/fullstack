@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import PersonsService from './services/persons'
 
 // All components defined in a single file against good practices
 
@@ -37,9 +37,9 @@ const App = () => {
   const [nameFilter, setNameFilter] = useState('')
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then(response => setPersons(response.data))
+    PersonsService
+      .getInitial()
+        .then(personsInitial => setPersons(personsInitial))
   }, [])
 
   const handleNewEntry = (event) => {
@@ -47,9 +47,14 @@ const App = () => {
     if (persons.find(person => person.name === newName)) {
       alert(`${newName} is already added to phonebook`)
     } else {
-      setPersons(persons.concat({name: newName, number: newNumber, id: persons.length + 1}))
-      setNewName("")
-      setNewNumber("")
+      const newPerson = {name: newName, number: newNumber}
+      PersonsService
+        .create(newPerson)
+          .then(addedPerson => {
+            setPersons(persons.concat(addedPerson))
+            setNewName("")
+            setNewNumber("")
+          })
     }
   }
 
