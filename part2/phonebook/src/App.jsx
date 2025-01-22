@@ -20,14 +20,15 @@ const Filter = ({text, filter, onChange}) =>
     {text} <input value={filter} onChange={onChange} />
   </div>
 
-const Persons = ({persons}) =>
+const Persons = ({persons, onDelete}) =>
   <div>
-    {persons.map(person => <Person key={person.id} person={person} />)}
+    {persons.map(person => <Person key={person.id} person={person} onDelete={onDelete} />)}
   </div>
 
-const Person = ({person}) =>
+const Person = ({person, onDelete}) =>
   <div>
     {person.name} {person.number}
+    <button onClick={() => onDelete(person)}>delete</button>
   </div>
 
 const App = () => {
@@ -38,7 +39,7 @@ const App = () => {
 
   useEffect(() => {
     PersonsService
-      .getInitial()
+      .getAll()
         .then(personsInitial => setPersons(personsInitial))
   }, [])
 
@@ -56,6 +57,13 @@ const App = () => {
             setNewNumber("")
           })
     }
+  }
+
+  const handleDeleteEntry = person => {
+    if (confirm(`Do you want to remove ${person.name}?`))
+      PersonsService
+        .exterminate(person.id)
+          .then(removed => setPersons(persons.filter(p => p.id != removed.id)))
   }
 
   const handleChangeName = (event) => setNewName(event.target.value)
@@ -76,7 +84,7 @@ const App = () => {
         onChangeNumber={handleChangeNumber} onSubmit={handleNewEntry}
       />
       <h2>Numbers</h2>
-      <Persons persons={personsfiltered} />
+      <Persons persons={personsfiltered} onDelete={handleDeleteEntry} />
     </div>
   )
 }
