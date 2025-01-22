@@ -50,7 +50,7 @@ const App = () => {
     if (foundPerson) {
       if (confirm(`${newPerson.name} is already added to phonebook, replace the old number with a new one?`)) {
         PersonsService
-          .edit(foundPerson.id, newPerson.number)
+          .edit(foundPerson.id, newPerson)
             .then(editedPerson => {
               setPersons(persons.map(p => p.id === foundPerson.id ? {...p, number: newPerson.number} : p))
               setNewName("")
