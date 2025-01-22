@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
-// Incredibly bad code that I won't bother fixing
+// Incredibly bad code that I won't bother fixing.
+// Used Open-Meteo instead of Open weather map because
+// the latter requires payment information
 
 const Searchbar = ({countryQuery, onChangeCountryQuery}) =>
   <div>
