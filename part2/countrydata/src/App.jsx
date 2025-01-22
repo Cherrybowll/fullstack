@@ -7,7 +7,7 @@ const Searchbar = ({countryQuery, onChangeCountryQuery}) =>
     <input value={countryQuery} onChange={onChangeCountryQuery} placeholder="enter country"/>
   </div>
 
-const Countries = ({countries}) => {
+const Countries = ({countries, countryShown, onShowCountry}) => {
   if (countries === null) {
     return
   }
@@ -17,7 +17,13 @@ const Countries = ({countries}) => {
   } else if (count > 1) {
     return (
       <div>
-        {countries.map(country => <p key={country.name.common}>{country.name.common}</p>)}
+        {countries.map(country => (country.name.common != countryShown) ?
+          <div key={country.name.common}>
+            {country.name.common}
+            <button onClick={() => onShowCountry(country.name.common)}>show</button>
+          </div>
+          : <Country key={country.name.common} country={country} />
+        )}
       </div>
     )
   } else if (count === 1) {
@@ -41,6 +47,7 @@ const Country = ({country}) =>
 const App = () => {
   const [countryQuery, setCountryQuery] = useState('')
   const [allCountries, setAllCountries] = useState(null)
+  const [countryShown, setCountryShown] = useState(null)
 
   useEffect(() => {
     axios
@@ -48,7 +55,11 @@ const App = () => {
         .then(response => setAllCountries(response.data))
   }, [])
 
-  const handleChangeCountryQuery = (event) => setCountryQuery(event.target.value)
+  const handleChangeCountryQuery = (event) => {
+    setCountryQuery(event.target.value)
+    setCountryShown(null)
+  }
+  const handleShowCountry = (country) => setCountryShown(country)
   const filterCountries = () => {
     if (allCountries === null || countryQuery === '') {
       return allCountries
@@ -61,7 +72,10 @@ const App = () => {
   return (
     <div>
       <Searchbar countryQuery={countryQuery} onChangeCountryQuery={handleChangeCountryQuery} />
-      <Countries countries={filterCountries(countryQuery)} />
+      <Countries
+        countries={filterCountries(countryQuery)}
+        countryShown={countryShown}
+        onShowCountry={handleShowCountry} />
     </div>
   )
 }
