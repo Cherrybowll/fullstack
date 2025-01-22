@@ -14,4 +14,8 @@ const exterminate = id => {
     return axios.delete(`${baseUrl}/${id}`).then(response => response.data)
 }
 
-export default {getAll, create, exterminate}
+const edit = (id, newNumber) => {
+    return axios.patch(`${baseUrl}/${id}`, {number: newNumber}).then(response => response.data)
+}
+
+export default {getAll, create, exterminate, edit}

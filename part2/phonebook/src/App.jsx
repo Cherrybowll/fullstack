@@ -45,10 +45,19 @@ const App = () => {
 
   const handleNewEntry = (event) => {
     event.preventDefault()
-    if (persons.find(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+    const newPerson = {name: newName, number: newNumber}
+    const foundPerson = persons.find(person => person.name === newPerson.name)
+    if (foundPerson) {
+      if (confirm(`${newPerson.name} is already added to phonebook, replace the old number with a new one?`)) {
+        PersonsService
+          .edit(foundPerson.id, newPerson.number)
+            .then(editedPerson => {
+              setPersons(persons.map(p => p.id === foundPerson.id ? {...p, number: newPerson.number} : p))
+              setNewName("")
+              setNewNumber("")
+            })
+      }
     } else {
-      const newPerson = {name: newName, number: newNumber}
       PersonsService
         .create(newPerson)
           .then(addedPerson => {
