@@ -31,11 +31,21 @@ const Person = ({person, onDelete}) =>
     <button onClick={() => onDelete(person)}>delete</button>
   </div>
 
+const Message = ({message, error}) => {
+  if (message === null) {
+    return null
+  } else if (error) {
+    return <div className='error'>{message}</div>
+  }
+  return <div className='success'>{message}</div>
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [nameFilter, setNameFilter] = useState('')
+  const [message, setMessage] = useState({message: null, error: true})
 
   useEffect(() => {
     PersonsService
@@ -55,6 +65,13 @@ const App = () => {
               setPersons(persons.map(p => p.id === foundPerson.id ? {...p, number: newPerson.number} : p))
               setNewName("")
               setNewNumber("")
+              setMessage({message: `Edited ${foundPerson.name}`, error: false})
+              setTimeout(() => setMessage({message: null, error: true}), 5000)
+            })
+            .catch(error => {
+              setMessage({message: `${newPerson.name} doesn't exist on server`, error: true})
+              setTimeout(() => setMessage({message: null, error: true}), 5000)
+              setPersons(persons.filter(p => p.id != foundPerson.id))
             })
       }
     } else {
@@ -64,6 +81,12 @@ const App = () => {
             setPersons(persons.concat(addedPerson))
             setNewName("")
             setNewNumber("")
+            setMessage({message: `Added ${addedPerson.name}`, error: false})
+            setTimeout(() => setMessage({message: null, error: true}), 5000)
+          })
+          .catch(error => {
+            setMessage({message: `Unable to add ${newPerson.name}`, error: true})
+            setTimeout(() => setMessage({message: null, error: true}), 5000)
           })
     }
   }
@@ -72,7 +95,16 @@ const App = () => {
     if (confirm(`Do you want to remove ${person.name}?`))
       PersonsService
         .exterminate(person.id)
-          .then(removed => setPersons(persons.filter(p => p.id != removed.id)))
+          .then(removedPerson => {
+            setPersons(persons.filter(p => p.id != removedPerson.id))
+            setMessage({message: `Deleted ${removedPerson.name}`, error: false})
+            setTimeout(() => setMessage({message: null, error: true}), 5000)
+          })
+          .catch(error => {
+            setMessage({message: `${person.name} doesn't exist on server`, error: true})
+            setTimeout(() => setMessage({message: null, error: true}), 5000)
+            setPersons(persons.filter(p => p.id != person.id))
+          })
   }
 
   const handleChangeName = (event) => setNewName(event.target.value)
@@ -86,6 +118,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Message message={message.message} error={message.error} />
       <Filter text="Name filter" filter={nameFilter} onChange={handleChangeFilter} />
       <h2>Add new entry</h2>
       <PhonebookForm
