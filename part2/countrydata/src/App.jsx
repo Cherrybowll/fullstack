@@ -90,7 +90,7 @@ const App = () => {
     const country = allCountries.find(c => c.name.common === countryShown)
     if (country) {
       axios
-        .get(`https://api.open-meteo.com/v1/forecast?latitude=${country.latlng[0]}&longitude=${country.latlng[1]}&current=temperature_2m,precipitation,wind_speed_10m`)
+        .get(`https://api.open-meteo.com/v1/forecast?latitude=${country.capitalInfo.latlng[0]}&longitude=${country.capitalInfo.latlng[1]}&current=temperature_2m,precipitation,wind_speed_10m`)
           .then(response => setWeatherData(response.data))
           .catch(error => setWeatherData(null))
     }
