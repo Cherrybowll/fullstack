@@ -100,7 +100,7 @@ const App = () => {
     if (allCountries === null) {
       return
     }
-    const filteredCountries = countryQuery != '' ? allCountries.filter(c => c.name.common.includes(countryQuery)) : allCountries
+    const filteredCountries = countryQuery != '' ? allCountries.filter(c => c.name.common.toLowerCase().includes(countryQuery.toLowerCase())) : allCountries
     if (filteredCountries != null && filteredCountries.length === 1) {
       console.log("Match found")
       setCountryShown(filteredCountries[0].name.common)
@@ -117,7 +117,7 @@ const App = () => {
       return allCountries
     }
     return (
-      allCountries.filter(c => c.name.common.includes(countryQuery))
+      allCountries.filter(c => c.name.common.toLowerCase().includes(countryQuery.toLowerCase()))
     )
   }
 
