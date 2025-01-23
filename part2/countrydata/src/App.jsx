@@ -80,6 +80,7 @@ const App = () => {
     axios
       .get(`https://studies.cs.helsinki.fi/restcountries/api/all`)
         .then(response => setAllCountries(response.data))
+        .catch(error => null)
   }, [])
 
   useEffect(() => {
@@ -91,6 +92,7 @@ const App = () => {
       axios
         .get(`https://api.open-meteo.com/v1/forecast?latitude=${country.latlng[0]}&longitude=${country.latlng[1]}&current=temperature_2m,precipitation,wind_speed_10m`)
           .then(response => setWeatherData(response.data))
+          .catch(error => setWeatherData(null))
     }
   }, [countryShown])
 
