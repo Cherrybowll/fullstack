@@ -32,9 +32,20 @@ app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
 
+app.get('/api/persons/:id', (request, response) => {
+  const id = request.params.id
+  const found_person = persons.find(p => p.id === id)
+
+  if (!found_person) {
+    return response.status(404).end()
+  }
+
+  response.json(found_person)
+})
+
 app.get('/info', (request, response) => {
-  const date = new Date()
-  response.send(`<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`)
+  const cur_date = new Date()
+  response.send(`<p>Phonebook has info for ${persons.length} people</p><p>${cur_date}</p>`)
 })
 
 const PORT = 3001
