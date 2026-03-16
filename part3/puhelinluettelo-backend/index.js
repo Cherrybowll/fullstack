@@ -54,7 +54,19 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   new_person = request.body
-  console.log(request.body)
+
+  if (!(new_person.name && new_person.number)) {
+    return response.status(400).json({
+      error: "content missing"
+    })
+  }
+
+  if (persons.find(p => p.name === new_person.name)) {
+    return response.status(400).json({
+      error: "name must be unique"
+    })
+  }
+
   const new_id = Math.floor(Math.random()*100000)
 
   new_person_object = {
