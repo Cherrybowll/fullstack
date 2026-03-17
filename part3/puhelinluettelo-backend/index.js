@@ -1,7 +1,10 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
+
 const app = express()
 
+app.use(cors())
 app.use(express.json())
 
 // Tämä ilmeisesti toimii
@@ -76,7 +79,7 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  const new_id = Math.floor(Math.random()*100000)
+  const new_id = String(Math.floor(Math.random()*100000))
 
   new_person_object = {
     id: new_id,
