@@ -1,0 +1,7 @@
+POST https://fullstack-phonebook-8yd6.onrender.com/api/persons
+Content-Type: application/json
+
+{
+    "name": "testi_ukko",
+    "number": "123456"
+}
