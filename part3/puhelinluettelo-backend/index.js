@@ -8,12 +8,22 @@ app.use(cors())
 app.use(express.json())
 
 // Tämä ilmeisesti toimii
-// Näyttää viivan "-" jos dataa ei ole tai esim. GET-pyyntö
 morgan.token('body', (request, response) => {
   return JSON.stringify(request.body)
 })
-//Tämä rivi copy-pastettu :bodya lukuunottamatta morganin dokumentaatiosta
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+// Toimii nyt paremmin viime vuonna kirjoittamallani versiolla
+app.use(
+  morgan(
+    ':method :url :status :res[content-length] - :response-time ms :body',
+    {skip: (request, response) => request.method !== "POST"}
+  )
+)
+app.use(
+  morgan(
+    'tiny',
+    {skip: (request, response) => request.method === "POST"}
+  )
+)
 
 let persons = [
   {
